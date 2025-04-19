@@ -2,17 +2,17 @@ import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
 import { useToast } from './ToastProvider'
 
-export default function AssetForm( { onSubmit }) {
+export default function AssetForm({ onSubmit }) {
   const [isin, setIsin] = useState('')
   const [name, setName] = useState('')
   const [type, setType] = useState('')
   const [currency, setCurrency] = useState('EUR')
   const [lsSymbol, setLsSymbol] = useState('')
   const [types, setTypes] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const toast = useToast()
 
-  // Fetch asset types from lookup table
   useEffect(() => {
     const fetchAssetTypes = async () => {
       const { data, error } = await supabase.from('asset_type').select('id')
@@ -49,8 +49,7 @@ export default function AssetForm( { onSubmit }) {
       ls_path: lsSymbol,
     }
 
-    console.log('Payload being sent:', payload)
-
+    setLoading(true)
     try {
       const { error } = await supabase.from('asset').insert([payload])
       if (error) {
@@ -62,21 +61,38 @@ export default function AssetForm( { onSubmit }) {
         setType('')
         setCurrency('EUR')
         setLsSymbol('')
-        onSubmit?.()
+        onSubmit?.() // 🔥 call parent handler
       }
     } catch (err) {
       toast.error('❌ Unexpected error.')
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-6 p-4 border rounded bg-white shadow space-y-2 max-w-md">
-      <h3 className="text-lg font-semibold">Add Asset</h3>
+    <form onSubmit={handleSubmit} className="mt-4 space-y-3 max-w-md">
+      <input
+        className="w-full border p-2 rounded"
+        placeholder="ISIN"
+        value={isin}
+        onChange={(e) => setIsin(e.target.value)}
+        required
+      />
+      <input
+        className="w-full border p-2 rounded"
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
 
-      <input className="w-full border p-2 rounded" placeholder="ISIN" value={isin} onChange={(e) => setIsin(e.target.value)} required />
-      <input className="w-full border p-2 rounded" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-
-      <select className="w-full border p-2 rounded" value={type} onChange={(e) => setType(e.target.value)} required>
+      <select
+        className="w-full border p-2 rounded"
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+        required
+      >
         <option value="" disabled>Select asset type</option>
         {types.map(({ id }) => (
           <option key={id} value={id}>
@@ -85,11 +101,28 @@ export default function AssetForm( { onSubmit }) {
         ))}
       </select>
 
-      <input className="w-full border p-2 rounded" placeholder="Currency (e.g. EUR)" value={currency} onChange={(e) => setCurrency(e.target.value)} />
-      <input className="w-full border p-2 rounded" placeholder="LS Symbol (optional)" value={lsSymbol} onChange={(e) => setLsSymbol(e.target.value)} />
+      <input
+        className="w-full border p-2 rounded"
+        placeholder="Currency (e.g. EUR)"
+        value={currency}
+        onChange={(e) => setCurrency(e.target.value)}
+      />
 
-      <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
-        Add Asset
+      <input
+        className="w-full border p-2 rounded"
+        placeholder="LS Symbol (optional)"
+        value={lsSymbol}
+        onChange={(e) => setLsSymbol(e.target.value)}
+      />
+
+      <button
+        type="submit"
+        disabled={loading}
+        className={`w-full p-2 rounded text-white ${
+          loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+        }`}
+      >
+        {loading ? 'Adding...' : 'Add Asset'}
       </button>
     </form>
   )

@@ -1,84 +1,77 @@
 import { createContext, useContext, useState, useCallback } from 'react'
-import { createPortal } from 'react-dom'
+import { v4 as uuidv4 } from 'uuid'
+import { AnimatePresence, motion } from 'framer-motion'
 
 const ToastContext = createContext()
 
-export function useToast() {
-  return useContext(ToastContext)
-}
+export const useToast = () => useContext(ToastContext)
 
-export function ToastProvider({ children }) {
+export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([])
+  const maxToasts = 3
+  const duration = 4000
 
-  const addToast = useCallback((message, type = 'default') => {
-    const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`
-    setToasts((prev) => [...prev, { id, message, type }])
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id))
-    }, 4000)
+  const showToast = useCallback((message, type = 'info', options = {}) => {
+    const id = uuidv4()
+    const toast = { id, message, type, ...options }
+
+    setToasts((prev) => {
+      const next = [...prev, toast]
+      return next.slice(-maxToasts)
+    })
+
+    if (!options.persistent) {
+      setTimeout(() => {
+        setToasts((prev) => prev.filter((t) => t.id !== id))
+      }, duration)
+    }
   }, [])
 
-  const toast = {
-    success: (msg) => addToast(msg, 'success'),
-    error: (msg) => addToast(msg, 'error'),
-    info: (msg) => addToast(msg, 'info'),
-    warn: (msg) => addToast(msg, 'warning'),
-    default: (msg) => addToast(msg),
+  const contextValue = {
+    toast: showToast,
+    success: (msg, opts) => showToast(msg, 'success', opts),
+    error: (msg, opts) => showToast(msg, 'error', opts),
+    warn: (msg, opts) => showToast(msg, 'warn', opts),
   }
-
-  const toastStyles = {
-    success: {
-      bg: '#22c55e', // green
-      icon: '✅',
-    },
-    error: {
-      bg: '#ef4444', // red
-      icon: '❌',
-    },
-    info: {
-      bg: '#3b82f6', // blue
-      icon: 'ℹ️',
-    },
-    warning: {
-      bg: '#facc15', // yellow
-      icon: '⚠️',
-    },
-    default: {
-      bg: '#6b7280', // gray
-      icon: '💬',
-    },
-  }
-
-  const toastElements = (
-    <div className="fixed top-4 right-4 flex flex-col space-y-2 z-[99999] w-[320px] pointer-events-none">
-      {toasts.map((toastObj) => {
-        const style = toastStyles[toastObj.type] || toastStyles.default
-        return (
-          <div
-            key={toastObj.id}
-            onClick={() => setToasts((prev) => prev.filter((t) => t.id !== toastObj.id))}
-            className="flex items-start gap-3 pointer-events-auto animate-slide-in cursor-pointer shadow-xl rounded-lg"
-            style={{
-              backgroundColor: style.bg,
-              color: '#fff',
-              padding: '12px 16px',
-              fontWeight: 500,
-              fontSize: '14px',
-              boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
-            }}
-          >
-            <span style={{ fontSize: '18px' }}>{style.icon}</span>
-            <span>{toastObj.message}</span>
-          </div>
-        )
-      })}
-    </div>
-  )
 
   return (
-    <ToastContext.Provider value={toast}>
+    <ToastContext.Provider value={contextValue}>
       {children}
-      {createPortal(toastElements, document.getElementById('root'))}
+      <div className="fixed top-5 right-5 space-y-2 z-50 w-full max-w-xs">
+        <AnimatePresence>
+          {toasts.map((toast) => (
+            <motion.div
+              key={toast.id}
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 100 }}
+              transition={{ duration: 0.3 }}
+              className={`flex items-center justify-between gap-4 px-4 py-2 rounded shadow text-sm transition-opacity text-white ${
+                toast.type === 'success'
+                  ? 'bg-green-600'
+                  : toast.type === 'error'
+                  ? 'bg-red-600'
+                  : toast.type === 'warn'
+                  ? 'bg-yellow-500 text-black'
+                  : 'bg-gray-800'
+              }`}
+            >
+              <span>{toast.message}</span>
+              {toast.onUndo && (
+                <button
+                  onClick={() => {
+                    toast.onUndo()
+                    setToasts((prev) => prev.filter((t) => t.id !== toast.id))
+                  }}
+                  className="underline text-xs ml-auto"
+                >
+                  Undo
+                </button>
+              )}
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
     </ToastContext.Provider>
   )
 }

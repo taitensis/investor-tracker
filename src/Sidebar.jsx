@@ -1,6 +1,7 @@
 import {
-    UserCircleIcon,
+    HomeIcon,
     BriefcaseIcon,
+    PencilSquareIcon,
     Cog6ToothIcon,
   } from '@heroicons/react/24/solid'
   
@@ -8,38 +9,44 @@ import {
     {
       id: 'overview',
       label: 'Overview',
-      icon: <UserCircleIcon className="w-4 h-4 me-2" />,
+      icon: <HomeIcon className="w-5 h-5" />,
     },
     {
       id: 'portfolios',
       label: 'Portfolios',
-      icon: <BriefcaseIcon className="w-4 h-4 me-2" />,
+      icon: <BriefcaseIcon className="w-5 h-5" />,
     },
+    /*{
+      id: 'assetEditor',
+      label: 'Asset Editor',
+      icon: <PencilSquareIcon className="w-5 h-5" />,
+    },*/
     {
       id: 'settings',
       label: 'Settings',
-      icon: <Cog6ToothIcon className="w-4 h-4 me-2" />,
+      icon: <Cog6ToothIcon className="w-5 h-5" />,
     },
   ]
   
   export default function Sidebar({ activeTab, setActiveTab }) {
     return (
-      <ul className="flex flex-col space-y-4 text-sm font-medium text-gray-500 dark:text-gray-400 md:me-4 mb-4 md:mb-0">
+      <ul className="flex flex-col space-y-2 text-sm font-medium text-gray-500 dark:text-gray-400 p-4">
         {navItems.map((item) => (
           <li key={item.id}>
             <button
               onClick={() => setActiveTab(item.id)}
-              className={`inline-flex items-center px-4 py-3 rounded-lg w-full transition ${
+              className={`flex items-center gap-3 px-4 py-3 w-full text-left rounded-lg transition-all ${
                 activeTab === item.id
-                  ? 'bg-blue-700 text-white font-semibold shadow dark:bg-blue-600'
-                  : 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white'
+                  ? 'bg-blue-600 text-white shadow-sm dark:bg-blue-500'
+                  : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white'
               }`}
             >
               {item.icon}
-              {item.label}
+              <span className="truncate">{item.label}</span>
             </button>
           </li>
         ))}
       </ul>
     )
-  }  
+  }
+  

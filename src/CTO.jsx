@@ -1,59 +1,92 @@
 import { useEffect, useState } from 'react'
-import TradeForm from './TradeForm'
-import TradeList from './TradeList'
 import { supabase } from './supabaseClient'
+import { useToast } from './ToastProvider'
+import { TrashIcon } from '@heroicons/react/24/solid'
 
 export default function CTO() {
-  const [ctoAccount, setCtoAccount] = useState(null)
   const [assets, setAssets] = useState([])
-  const [initialTrade, setInitialTrade] = useState(null)
-  const [refreshKey, setRefreshKey] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const toast = useToast()
 
   useEffect(() => {
-    const loadCTO = async () => {
-      const user = (await supabase.auth.getUser()).data.user
-      const { data: accounts } = await supabase
-        .from('account')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('type', 'CTO')
-        .limit(1)
-
-      if (accounts?.length > 0) {
-        setCtoAccount(accounts[0])
-      }
-    }
-
-    const loadAssets = async () => {
-      const { data } = await supabase.from('asset').select('*')
-      if (data) setAssets(data)
-    }
-
-    loadCTO()
-    loadAssets()
+    fetchAssets()
   }, [])
 
-  if (!ctoAccount || !assets.length) return <p className="text-gray-600">Loading CTO account…</p>
+  const fetchAssets = async () => {
+    setLoading(true)
+    const user = (await supabase.auth.getUser()).data.user
+    if (!user) {
+      toast.error('❌ You must be logged in.')
+      return
+    }
+
+    const { data, error } = await supabase
+      .from('asset')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('type', 'cto')
+
+    if (error) {
+      toast.error('❌ Failed to fetch CTO assets.')
+    } else {
+      setAssets(data)
+    }
+
+    setLoading(false)
+  }
+
+  const handleDelete = async (asset) => {
+    setAssets((prev) => prev.filter((a) => a.id !== asset.id))
+
+    toast(`🗑️ Deleted "${asset.name}"`, {
+      type: 'error',
+      onUndo: async () => {
+        const { error } = await supabase.from('asset').insert([asset])
+        if (!error) {
+          toast.success('Undo complete.')
+          fetchAssets()
+        }
+      },
+    })
+
+    await supabase.from('asset').delete().eq('id', asset.id)
+  }
+
+  if (loading) return <p className="text-gray-500">Loading...</p>
+  if (assets.length === 0) return <p className="text-gray-500">No CTO assets found.</p>
 
   return (
-    <div className="space-y-6 bg-gray-50 rounded-xl border shadow-lg">
-      <h2 className="text-2xl font-bold">CTO</h2>
-
-      <TradeForm
-        accounts={[ctoAccount]}
-        assets={assets}
-        initialTrade={initialTrade}
-        onCreated={() => {
-          setInitialTrade(null)
-          setRefreshKey(prev => prev + 1) // 🔁 trigger list reload
-        }}
-      />
-
-      <TradeList
-        accountId={ctoAccount.id}
-        onEdit={setInitialTrade}
-        refreshKey={refreshKey} // pass it down
-      />
-    </div>
+    <table className="w-full text-sm text-left border-separate border-spacing-y-2">
+      <thead>
+        <tr className="text-gray-600 dark:text-gray-300">
+          <th className="px-2">ISIN</th>
+          <th className="px-2">Name</th>
+          <th className="px-2">Currency</th>
+          <th className="px-2">Symbol</th>
+          <th className="px-2 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {assets.map((asset) => (
+          <tr
+            key={asset.id}
+            className="bg-gray-100 dark:bg-gray-800 rounded shadow-sm"
+          >
+            <td className="px-2 py-1">{asset.isin}</td>
+            <td className="px-2 py-1">{asset.name}</td>
+            <td className="px-2 py-1">{asset.currency}</td>
+            <td className="px-2 py-1">{asset.ls_path || '-'}</td>
+            <td className="px-2 py-1 text-right">
+              <button
+                onClick={() => handleDelete(asset)}
+                className="text-red-500 hover:text-red-700"
+              >
+                <TrashIcon className="w-4 h-4 inline-block" />
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   )
 }

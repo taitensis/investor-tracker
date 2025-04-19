@@ -9,7 +9,7 @@ export default function Settings() {
 
   const handleAssetAdded = () => {
     setShowModal(false)
-    toast('✅ Asset successfully added!')
+    toast("✅ Asset successfully added!")
   }
 
   return (
@@ -29,5 +29,4 @@ export default function Settings() {
       </Modal>
     </div>
   )
-      }
-
+}
