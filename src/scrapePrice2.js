@@ -2,15 +2,18 @@ import axios from 'axios';
 import fs from 'fs';
 
 const cheerio = await import('cheerio');
-const url = 'https://www.ls-tc.de/de/aktie/apple-aktie';
+const url = 'https://www.gettex.de/en/stock/US0378331005/';
 let lastPrice = null;
 
 async function scrapeStaticPrice() {
   try {
     const { data: html } = await axios.get(url);
     const $ = cheerio.load(html);
+    
+    console.log(html); // 🔍 check if the price is in here
 
-    const rawPrice = $('span[source="lightstreamer"][field="mid"]').first().text().trim();
+
+    const rawPrice = $('div.last-price').children().eq(1).text().trim();
     const price = parseFloat(rawPrice.replace(',', '.'));
 
     if (isNaN(price)) {

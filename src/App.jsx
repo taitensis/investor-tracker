@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Overview from './Overview'
 import AssetForm from './AssetForm'
-import { useToast } from './ToastProvider'
+import { useToast } from './components/toast/ToastProvider'
 import Sidebar from './Sidebar'
 import Portfolios from './Portfolios'
 import Settings from './Settings'

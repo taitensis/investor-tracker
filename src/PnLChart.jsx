@@ -10,7 +10,7 @@ import {
   Legend
 } from 'recharts'
 import { supabase } from './supabaseClient'
-import { useToast } from './ToastProvider'
+import { useToast } from './components/toast/ToastProvider'
 
 export default function PnLChart({ accountId = null }) {
   const [data, setData] = useState([])

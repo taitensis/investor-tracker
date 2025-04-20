@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './supabaseClient'
-import { useToast } from './ToastProvider'
+import { useToast } from './components/toast/ToastProvider'
 import { TrashIcon } from '@heroicons/react/24/solid'
 
-export default function CTO() {
+export default function PEA() {
   const [assets, setAssets] = useState([])
   const [loading, setLoading] = useState(true)
   const toast = useToast()
@@ -24,10 +24,10 @@ export default function CTO() {
       .from('asset')
       .select('*')
       .eq('user_id', user.id)
-      .eq('type', 'cto')
+      .eq('type', 'pea')
 
     if (error) {
-      toast.error('❌ Failed to fetch CTO assets.')
+      toast.error('❌ Failed to fetch PEA assets.')
     } else {
       setAssets(data)
     }
@@ -53,7 +53,7 @@ export default function CTO() {
   }
 
   if (loading) return <p className="text-gray-500">Loading...</p>
-  if (assets.length === 0) return <p className="text-gray-500">No CTO assets found.</p>
+  if (assets.length === 0) return <p className="text-gray-500">No PEA assets found.</p>
 
   return (
     <table className="w-full text-sm text-left border-separate border-spacing-y-2">

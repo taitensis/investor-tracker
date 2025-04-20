@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
-import { useToast } from './ToastProvider'
+import { useToast } from './components/toast/ToastProvider'
 
 export default function AssetForm({ onSubmit }) {
   const [isin, setIsin] = useState('')

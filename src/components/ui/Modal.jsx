@@ -1,50 +1,20 @@
-import { useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+// src/components/ui/Modal.jsx
+import React from "react";
 
-export default function Modal({ isOpen, onClose, children }) {
-  // 🔐 Escape key closes the modal
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        onClose()
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown)
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [isOpen, onClose])
+export const Modal = ({ isOpen, onClose, children }) => {
+  if (!isOpen) return null;
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+      <div className="bg-white rounded-lg p-6 max-w-lg w-full shadow-lg relative">
+        <button
           onClick={onClose}
+          className="absolute top-2 right-3 text-gray-500 hover:text-gray-700 text-lg"
         >
-          <motion.div
-            className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 w-full max-w-lg relative"
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={(e) => e.stopPropagation()} // Prevent close on inner click
-          >
-            {children}
-            <button
-              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-white text-xl"
-              onClick={onClose}
-              aria-label="Close modal"
-            >
-              ✕
-            </button>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
-  )
-}
+          &times;
+        </button>
+        {children}
+      </div>
+    </div>
+  );
+};
