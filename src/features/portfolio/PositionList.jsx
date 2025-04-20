@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { supabase } from './supabaseClient'
-import { getLsPrice } from './lsPrice'
-import { Card } from './components/ui/Card'
+import { supabase } from '../../supabaseClient'
+import { getLsPrice } from '../../services/lsPrice'
+import { Card } from '../../components/ui/Card'
 import {
   buildPositionsFromTrades,
   buildLsLink,
-} from './utils/portfolioUtils'
-import { fetchTradesByUser } from './utils/supabaseQueries'
+} from '../../utils/portfolioUtils'
+import { fetchTradesByUser } from '../../utils/supabaseQueries'
 
 export default function PositionList() {
   const [positions, setPositions] = useState([])
