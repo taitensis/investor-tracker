@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { supabase } from './supabaseClient'
+import { supabase } from '../../supabaseClient'
 import { useToast } from './ToastProvider'
 
 export default function TradeForm({ accounts = [], assets = [], onCreated, initialTrade = null }) {

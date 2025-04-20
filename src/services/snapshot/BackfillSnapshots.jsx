@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react'
-import { supabase } from './supabaseClient'
-import { useToast } from './components/toast/ToastProvider'
+import { SupabaseClient } from '@supabase/supabase-js'
+import { useToast } from '../../components/toast/ToastProvider'
 
 export default function BackfillSnapshots() {
   const toast = useToast()

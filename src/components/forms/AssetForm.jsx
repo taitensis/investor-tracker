@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { supabase } from './supabaseClient'
-import { useToast } from './components/toast/ToastProvider'
+import { supabase } from '@supabase/auth-ui-shared'
+import { useToast } from '../toast/ToastProvider'
 
 export default function AssetForm({ onSubmit }) {
   const [isin, setIsin] = useState('')
@@ -118,9 +118,8 @@ export default function AssetForm({ onSubmit }) {
       <button
         type="submit"
         disabled={loading}
-        className={`w-full p-2 rounded text-white ${
-          loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-        }`}
+        className={`w-full p-2 rounded text-white ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+          }`}
       >
         {loading ? 'Adding...' : 'Add Asset'}
       </button>

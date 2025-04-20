@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { supabase } from './supabaseClient'
+import { supabase } from '../../supabaseClient'
 
 export default function Auth() {
   const [email, setEmail] = useState('')
@@ -10,9 +10,9 @@ export default function Auth() {
   const handleLogin = async (type) => {
     setLoading(true)
     setError('')
-  
+
     let result
-  
+
     if (type === 'LOGIN') {
       result = await supabase.auth.signInWithPassword({
         email,
@@ -24,10 +24,10 @@ export default function Auth() {
         password,
       })
     }
-  
+
     const { error } = result
     if (error) setError(error.message)
-  
+
     setLoading(false)
   }
 

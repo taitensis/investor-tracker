@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import Overview from './Overview'
-import AssetForm from './AssetForm'
+import PerformanceSummary from './features/dashboard/PerformanceSummary'
+import AssetForm from './components/forms/AssetForm'
 import { useToast } from './components/toast/ToastProvider'
-import Sidebar from './Sidebar'
-import Portfolios from './Portfolios'
-import Settings from './Settings'
+import Sidebar from './layouts/Sidebar'
+import PositionList from './features/portfolio/PositionList'
+import Settings from './features/settings/Settings'
 
 export default function App() {
   const toast = useToast()

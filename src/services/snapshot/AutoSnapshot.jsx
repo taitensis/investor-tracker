@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react'
-import { supabase } from './supabaseClient'
-import { useToast } from './components/toast/ToastProvider'
+import { supabase } from '../../supabaseClient'
+import { useToast } from '../../components/toast/ToastProvider'
 
 export default function AutoSnapshot() {
   const toast = useToast()

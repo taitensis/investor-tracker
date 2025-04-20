@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { supabase } from './supabaseClient'
-import { useToast } from './components/toast/ToastProvider'
+import { supabase } from '../../supabaseClient'
+import { useToast } from '../../components/toast/ToastProvider'
 import { TrashIcon } from '@heroicons/react/24/solid'
 
 export default function CTO() {

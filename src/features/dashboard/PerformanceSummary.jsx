@@ -1,10 +1,10 @@
-import PositionList from './PositionList'
-import AutoSnapshot from './AutoSnapshot'
+import PositionList from '../portfolio/PositionList'
+import AutoSnapshot from '../../services/snapshot/AutoSnapshot'
 import PnLChart from './PnLChart'
-import BackfillSnapshots from './BackfillSnapshots'
+import BackfillSnapshots from '../../services/snapshot/BackfillSnapshots'
 BackfillSnapshots
 
-export default function Overview() {
+export default function PerformanceSummary() {
   return (
     <div className="space-y-6 bg-gray-50 rounded-xl border shadow-lg">
       <h2 className="text-2xl font-bold mb-2">Portfolio Overview</h2>

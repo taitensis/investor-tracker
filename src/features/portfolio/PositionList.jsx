@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../supabaseClient'
-import { getLsPrice } from '../../services/lsPrice'
+import { fetchMarketPrice } from '@/services/price'
 import { Card } from '../../components/ui/Card'
 import {
   buildPositionsFromTrades,
@@ -15,7 +15,7 @@ export default function PositionList() {
     const loadPositions = async () => {
       const user = (await supabase.auth.getUser()).data.user
       const trades = await fetchTradesByUser(user.id)
-      const results = await buildPositionsFromTrades(trades, getLsPrice)
+      const results = await buildPositionsFromTrades(trades, fetchMarketPrice)
       setPositions(results)
     }
     loadPositions()
