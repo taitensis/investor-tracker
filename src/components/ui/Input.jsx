@@ -1,7 +1,7 @@
 // src/components/ui/Input.jsx
 import React from "react";
 
-export const Input = ({ label, className = "", ...props }) => (
+export default Input = ({ label, className = "", ...props }) => (
   <div className="flex flex-col gap-1">
     {label && <label className="text-sm font-medium text-gray-700">{label}</label>}
     <input

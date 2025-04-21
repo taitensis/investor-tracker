@@ -1,33 +1,25 @@
-import { useState } from 'react'
-import PerformanceSummary from './features/dashboard/PerformanceSummary'
-import AssetForm from './components/forms/AssetForm'
-import { useToast } from './components/toast/ToastProvider'
-import Sidebar from './layouts/Sidebar'
-import PositionList from './features/portfolio/PositionList'
-import Settings from './features/settings/Settings'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import MainLayout from '@layouts/MainLayout'
+import DashboardPage from '@pages/DashboardPage'
+import PositionPage from '@pages/PositionPage'
+import SettingsPage from '@pages/SettingsPage'
+import DividendPage from '@pages/DividendPage'
 
 export default function App() {
-  const toast = useToast()
-  const [activeTab, setActiveTab] = useState('overview')
-
-  const TABS = {
-    overview: <Overview />,
-    portfolios: <Portfolios />,
-    assetEditor: <AssetForm />,
-    settings: <Settings />,
-  }
-
   return (
-    <div className="md:flex min-h-screen bg-gray-100 text-gray-800">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div className="p-6 bg-white dark:bg-gray-800 rounded-lg w-full shadow-md">
-        {TABS[activeTab] || <p>Select a tab</p>}
-      </div>
-    </div>
+    <Router>
+      <MainLayout>
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/portfolio" element={<PositionPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/dividend" element={<DividendPage />} />
+        </Routes>
+      </MainLayout>
+    </Router>
   )
 }
-
-
 /*
         <div className="min-h-screen bg-gray-100 text-gray-800">
           {/* Top bar with buttons 

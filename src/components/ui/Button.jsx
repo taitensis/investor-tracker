@@ -1,4 +1,4 @@
-// src/components/ui/Button.jsx
+// ✅ Correct Button.jsx
 import React from "react";
 import classNames from "classnames";
 
@@ -17,7 +17,8 @@ const sizes = {
   lg: "text-lg",
 };
 
-export const Button = ({
+// ✅ Fix: declare function first
+const Button = ({
   children,
   onClick,
   variant = "primary",
@@ -37,3 +38,6 @@ export const Button = ({
     </button>
   );
 };
+
+// ✅ Then export after
+export default Button;

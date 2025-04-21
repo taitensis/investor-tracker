@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
-import { supabase } from '../../supabaseClient'
+import { supabase } from '../supabaseClient'
 import { fetchMarketPrice } from '@/services/price'
-import { Card } from '../../components/ui/Card'
+import { Card } from '../components/ui/Card'
 import {
   buildPositionsFromTrades,
   buildLsLink,
-} from '../../utils/portfolioUtils'
-import { fetchTradesByUser } from '../../utils/supabaseQueries'
+} from '../utils/portfolioUtils'
+import { fetchTradesByUser } from '../utils/supabaseQueries'
 
-export default function PositionList() {
+export default function PositionPage() {
   const [positions, setPositions] = useState([])
 
   useEffect(() => {
@@ -22,9 +22,6 @@ export default function PositionList() {
   }, [])
 
   return (
-
-
-
     <div className="p-4 max-w-4xl mx-auto mt-6">
       <h3 className="text-xl font-bold mb-4">Current Positions</h3>
       {positions.length === 0 ? (

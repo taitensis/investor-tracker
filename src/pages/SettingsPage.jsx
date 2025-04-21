@@ -1,10 +1,10 @@
 import { useState } from "react"
-import AssetForm from "../../components/forms/AssetForm"
-import Modal from "../../components/ui/Modal"
-import { useToast } from "../../components/toast/ToastProvider"
-import { Button } from "../../components/ui/Button"
+import AssetForm from "../components/forms/AssetForm"
+import Modal from "../components/ui/Modal"
+import { useToast } from "../components/toast/ToastProvider"
+import Button from "@components/ui/Button"
 
-export default function Settings() {
+export default function SettingsPage() {
   const [showModal, setShowModal] = useState(false)
   const toast = useToast()
 

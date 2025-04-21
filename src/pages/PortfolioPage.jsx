@@ -1,7 +1,7 @@
-import PEA from './PEA'
-import CTO from './CTO'
+import PEA from '@components/portfolio/PEA'
+import CTO from '@components/portfolio/CTO'
 
-export default function Portfolios() {
+export default function PortfolioPage() {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Your Portfolios</h2>
