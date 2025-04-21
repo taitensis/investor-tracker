@@ -93,7 +93,9 @@ export default function AssetForm({ onSubmit }) {
         onChange={(e) => setType(e.target.value)}
         required
       >
-        <option value="" disabled>Select asset type</option>
+        <option value="" disabled>
+          Select asset type
+        </option>
         {types.map(({ id }) => (
           <option key={id} value={id}>
             {id.charAt(0).toUpperCase() + id.slice(1)}
@@ -118,8 +120,11 @@ export default function AssetForm({ onSubmit }) {
       <button
         type="submit"
         disabled={loading}
-        className={`w-full p-2 rounded text-white ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-          }`}
+        className={`w-full p-2 rounded text-white ${
+          loading
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-blue-600 hover:bg-blue-700'
+        }`}
       >
         {loading ? 'Adding...' : 'Add Asset'}
       </button>

@@ -33,12 +33,17 @@ export default function Dashboard({ user }) {
         Test Gettex Price (Apple)
       </button>
 
-      <button onClick={() => supabase.auth.signOut()} className="mb-4 text-red-600">Log Out</button>
+      <button
+        onClick={() => supabase.auth.signOut()}
+        className="mb-4 text-red-600"
+      >
+        Log Out
+      </button>
 
       <div className="mt-6">
         <h2 className="text-lg font-semibold">Your Accounts</h2>
         <ul className="space-y-2 mt-2">
-          {accounts.map(acc => (
+          {accounts.map((acc) => (
             <li key={acc.id} className="p-2 border rounded">
               {acc.name}
             </li>

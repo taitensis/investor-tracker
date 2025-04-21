@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../supabaseClient'
 import { fetchMarketPrice } from '@/services/price'
 import { Card } from '../components/ui/Card'
-import {
-  buildPositionsFromTrades,
-  buildLsLink,
-} from '../utils/portfolioUtils'
+import { buildPositionsFromTrades, buildLsLink } from '../utils/portfolioUtils'
 import { fetchTradesByUser } from '../utils/supabaseQueries'
 
 export default function PositionPage() {
@@ -29,13 +26,19 @@ export default function PositionPage() {
       ) : (
         <div className="grid gap-4">
           {positions.map((pos, i) => (
-            <Card key={i} className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <Card
+              key={i}
+              className="flex flex-col sm:flex-row items-center justify-between gap-4"
+            >
               <div>
                 {/* <div className="text-sm text-gray-500">{pos.account.name}</div> */}
                 <div className="font-medium">
-                  {/* {pos.asset.isin} – */}{pos.asset.name}
+                  {/* {pos.asset.isin} – */}
+                  {pos.asset.name}
                 </div>
-                <div>{pos.marketValue !== '-' ? `€${pos.marketValue}` : '-'}</div>
+                <div>
+                  {pos.marketValue !== '-' ? `€${pos.marketValue}` : '-'}
+                </div>
                 {/* <div className="text-sm text-gray-500 capitalize">{pos.asset.type}</div> */}
               </div>
 
@@ -45,13 +48,19 @@ export default function PositionPage() {
                 {/* <div>Price: <strong>{pos.marketPrice ? `€${pos.marketPrice}` : '-'}</strong></div> */}
                 {/* <div>Value: <strong>{pos.marketValue !== '-' ? `€${pos.marketValue}` : '-'}</strong></div> */}
                 <div>
-                  P&amp;L:{" "}
+                  P&amp;L:{' '}
                   {pos.percentChange !== null ? (
-                    <strong className={parseFloat(pos.pnl) < 0 ? "text-red-600" : "text-green-600"}>
+                    <strong
+                      className={
+                        parseFloat(pos.pnl) < 0
+                          ? 'text-red-600'
+                          : 'text-green-600'
+                      }
+                    >
                       {pos.percentChange}%
                     </strong>
                   ) : (
-                    "-"
+                    '-'
                   )}
                 </div>
                 {/* <div>
@@ -73,8 +82,7 @@ export default function PositionPage() {
             </Card>
           ))}
         </div>
-      )
-      }
-    </div >
+      )}
+    </div>
   )
 }

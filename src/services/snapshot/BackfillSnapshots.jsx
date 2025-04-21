@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react'
 import { SupabaseClient } from '@supabase/supabase-js'
 import { useToast } from '../../components/toast/ToastProvider'
@@ -29,7 +28,7 @@ export default function BackfillSnapshots() {
         return
       }
 
-      console.log("📦 Raw trade dates:")
+      console.log('📦 Raw trade dates:')
       trades.forEach((t) => console.log(t.date))
 
       const { data: prices, error: priceError } = await supabase
@@ -38,7 +37,7 @@ export default function BackfillSnapshots() {
 
       if (priceError || !prices?.length) {
         toast.error('❌ Failed to load historical prices.')
-        console.error("❌ priceError:", priceError)
+        console.error('❌ priceError:', priceError)
         return
       }
 
@@ -48,17 +47,17 @@ export default function BackfillSnapshots() {
         priceMap[key] = parseFloat(row.price)
       }
 
-      const allDates = Array.from(new Set(prices.map(p => p.date))).sort()
+      const allDates = Array.from(new Set(prices.map((p) => p.date))).sort()
 
       const tradeDates = trades
-        .map(t => {
+        .map((t) => {
           try {
             const parsed = new Date(t.date)
             const iso = parsed.toISOString()
-            console.log("🔍 Parsed trade date:", t.date, "→", iso)
+            console.log('🔍 Parsed trade date:', t.date, '→', iso)
             return iso.slice(0, 10)
           } catch (err) {
-            console.error("❌ Failed to parse trade date:", t.date, err)
+            console.error('❌ Failed to parse trade date:', t.date, err)
             return null
           }
         })
@@ -67,25 +66,25 @@ export default function BackfillSnapshots() {
 
       const firstTradeDate = tradeDates[0] || null
 
-      console.log("📅 All trade dates (parsed):", tradeDates)
-      console.log("📅 First trade date:", firstTradeDate)
+      console.log('📅 All trade dates (parsed):', tradeDates)
+      console.log('📅 First trade date:', firstTradeDate)
 
       if (!firstTradeDate) {
-        toast.error("⚠️ No valid trade dates to backfill.")
+        toast.error('⚠️ No valid trade dates to backfill.')
         return
       }
 
-      const filteredDates = allDates.filter(d => d >= firstTradeDate)
+      const filteredDates = allDates.filter((d) => d >= firstTradeDate)
       const snapshots = []
 
       for (const date of filteredDates) {
-        console.log("\n📅 Evaluating date:", date)
+        console.log('\n📅 Evaluating date:', date)
 
-        const tradesUpToDate = trades.filter(t => {
+        const tradesUpToDate = trades.filter((t) => {
           const d = t.date ? new Date(t.date).toISOString().slice(0, 10) : null
           return d && d <= date && d <= new Date().toISOString().slice(0, 10)
         })
-        console.log("🧾 Trades considered:", tradesUpToDate.length)
+        console.log('🧾 Trades considered:', tradesUpToDate.length)
 
         const grouped = {}
         for (const trade of tradesUpToDate) {
@@ -110,7 +109,7 @@ export default function BackfillSnapshots() {
             const price = priceMap[date + '|' + isin]
 
             if (!price) {
-              console.log("❌ Missing price for", isin, "on", date)
+              console.log('❌ Missing price for', isin, 'on', date)
               continue
             }
 
@@ -118,15 +117,25 @@ export default function BackfillSnapshots() {
             let cost = 0
 
             for (const trade of assetTrades) {
-              const q = trade.action === 'buy' ? trade.quantity : -trade.quantity
+              const q =
+                trade.action === 'buy' ? trade.quantity : -trade.quantity
               qty += q
               cost += q * trade.price_per_unit
             }
 
-            console.log("📦 ISIN:", isin, "Qty:", qty, "Price:", price, "Cost:", cost)
+            console.log(
+              '📦 ISIN:',
+              isin,
+              'Qty:',
+              qty,
+              'Price:',
+              price,
+              'Cost:',
+              cost
+            )
 
             if (qty <= 0) {
-              console.log("⚠️ Skipping asset with 0 qty:", isin)
+              console.log('⚠️ Skipping asset with 0 qty:', isin)
               continue
             }
 
@@ -141,16 +150,26 @@ export default function BackfillSnapshots() {
               date,
               market_value: totalValue,
               average_cost: totalCost,
-              pnl: totalValue - totalCost
+              pnl: totalValue - totalCost,
             })
-            console.log("✅ Snapshot prepared for account", account_id, "on", date)
+            console.log(
+              '✅ Snapshot prepared for account',
+              account_id,
+              'on',
+              date
+            )
           } else {
-            console.log("⏭️ Skipped snapshot for account", account_id, "on", date)
+            console.log(
+              '⏭️ Skipped snapshot for account',
+              account_id,
+              'on',
+              date
+            )
           }
         }
       }
 
-      console.log("📤 Snapshot payload:", snapshots)
+      console.log('📤 Snapshot payload:', snapshots)
 
       if (!snapshots.length) {
         toast.error('⚠️ No snapshots to insert.')

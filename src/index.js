@@ -5,8 +5,8 @@ const assets = [
     name: 'Apple Inc',
     type: 'stock',
     source: 'ariva',
-    path: ''
-  }
+    path: '',
+  },
 ]
 
 ;(async () => {

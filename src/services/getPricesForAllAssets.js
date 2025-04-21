@@ -16,7 +16,10 @@ async function getLsPrice(asset) {
   try {
     const { data: html } = await axios.get(url)
     const $ = cheerio.load(html)
-    const raw = $('span[source="lightstreamer"][field="mid"]').first().text().trim()
+    const raw = $('span[source="lightstreamer"][field="mid"]')
+      .first()
+      .text()
+      .trim()
     const price = parseFloat(raw.replace(',', '.'))
     return isNaN(price) ? null : price
   } catch (e) {

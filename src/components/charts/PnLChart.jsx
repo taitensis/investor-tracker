@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react'
 import {
   LineChart,
@@ -7,7 +6,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  Legend
+  Legend,
 } from 'recharts'
 import { SupabaseClient } from '@supabase/supabase-js'
 import { useToast } from './toast/ToastProvider'
@@ -32,7 +31,7 @@ export default function PnLChart({ accountId = null }) {
 
       if (error) {
         toast.error('❌ Failed to load chart data')
-        console.error("📉 Supabase error:", error)
+        console.error('📉 Supabase error:', error)
         return
       }
 
@@ -47,8 +46,10 @@ export default function PnLChart({ accountId = null }) {
         grouped[date].pnl += parseFloat(row.pnl || 0)
       }
 
-      const sorted = Object.values(grouped).sort((a, b) => new Date(a.date) - new Date(b.date))
-      console.log("✅ Chart data loaded:", sorted)
+      const sorted = Object.values(grouped).sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+      )
+      console.log('✅ Chart data loaded:', sorted)
       setData(sorted)
     }
 
@@ -59,7 +60,9 @@ export default function PnLChart({ accountId = null }) {
     <div className="bg-white p-4 rounded shadow mt-6">
       <h3 className="text-lg font-semibold mb-2">📈 Portfolio Over Time</h3>
       {data.length === 0 && (
-        <p className="text-sm text-gray-500 italic">No chart data available yet.</p>
+        <p className="text-sm text-gray-500 italic">
+          No chart data available yet.
+        </p>
       )}
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data}>

@@ -43,11 +43,17 @@ export default function TradeList({ accountId, onEdit, refreshKey }) {
   return (
     <div className="space-y-2">
       {trades.map((trade) => (
-        <div key={trade.id} className="p-3 border rounded bg-white shadow-sm flex justify-between items-center">
+        <div
+          key={trade.id}
+          className="p-3 border rounded bg-white shadow-sm flex justify-between items-center"
+        >
           <div>
-            <div className="font-semibold">{trade.asset?.isin} - {trade.asset?.name || 'Unknown Asset'}</div>
+            <div className="font-semibold">
+              {trade.asset?.isin} - {trade.asset?.name || 'Unknown Asset'}
+            </div>
             <div className="text-sm text-gray-600">
-              {trade.action} {trade.quantity} @ {trade.price_per_unit} on {trade.date}
+              {trade.action} {trade.quantity} @ {trade.price_per_unit} on{' '}
+              {trade.date}
             </div>
           </div>
           <div className="flex items-center gap-2">

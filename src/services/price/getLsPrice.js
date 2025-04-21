@@ -10,17 +10,20 @@ export async function getLsPrice(asset) {
       return null
     }
 
-    const res = await fetch('https://gggnrmwishakhoxjbvdp.functions.supabase.co/get-ls-price', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        ls_path: asset.ls_path,
-        type: asset.type
-      })
-    })
+    const res = await fetch(
+      'https://gggnrmwishakhoxjbvdp.functions.supabase.co/get-ls-price',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ls_path: asset.ls_path,
+          type: asset.type,
+        }),
+      }
+    )
 
     const json = await res.json()
     if (!res.ok) throw new Error(json.error || 'Unknown error')

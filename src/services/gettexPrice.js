@@ -1,11 +1,14 @@
 import * as cheerio from 'cheerio'
 
 export async function getPriceFromGettex(isin) {
-  const res = await fetch('https://gggnrmwishakhoxjbvdp.functions.supabase.co/gettex-price', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ isin })
-  })
+  const res = await fetch(
+    'https://gggnrmwishakhoxjbvdp.functions.supabase.co/gettex-price',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isin }),
+    }
+  )
 
   const data = await res.json()
 

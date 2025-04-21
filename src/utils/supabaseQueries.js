@@ -8,13 +8,15 @@ import { supabase } from '../supabaseClient'
 export async function fetchTradesByUser(userId) {
   const { data, error } = await supabase
     .from('trade')
-    .select(`
+    .select(
+      `
       action,
       quantity,
       price_per_unit,
       asset (id, isin, name, type, ls_path),
       account (name, type)
-    `)
+    `
+    )
     .eq('user_id', userId)
 
   if (error) throw error

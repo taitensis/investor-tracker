@@ -50,10 +50,10 @@ export const ToastProvider = ({ children }) => {
                 toast.type === 'success'
                   ? 'bg-green-600'
                   : toast.type === 'error'
-                  ? 'bg-red-600'
-                  : toast.type === 'warn'
-                  ? 'bg-yellow-500 text-black'
-                  : 'bg-gray-800'
+                    ? 'bg-red-600'
+                    : toast.type === 'warn'
+                      ? 'bg-yellow-500 text-black'
+                      : 'bg-gray-800'
               }`}
             >
               <span>{toast.message}</span>

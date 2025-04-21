@@ -8,13 +8,14 @@ const scrapers = {
     dataTypes: ['full-html'],
     parse: async (html, asset) => {
       return { fullHtml: html }
-    }
-  }
+    },
+  },
 }
 
 export async function scrapeAsset(asset) {
   const scraper = scrapers[asset.source]
-  if (!scraper) throw new Error(`No scraper defined for source: ${asset.source}`)
+  if (!scraper)
+    throw new Error(`No scraper defined for source: ${asset.source}`)
 
   const url = scraper.url(asset)
   console.log(`🔎 Scraping [${asset.name}] from ${url}...`)
@@ -26,7 +27,8 @@ export async function scrapeAsset(asset) {
     console.log(`✅ Success for ${asset.name}.`)
 
     if (result.fullHtml) {
-      const filename = asset.name.toLowerCase().replace(/\s+/g, '_') + '-full.html'
+      const filename =
+        asset.name.toLowerCase().replace(/\s+/g, '_') + '-full.html'
       fs.writeFileSync(filename, result.fullHtml)
       console.log(`📄 Full HTML saved to ${filename}`)
     }

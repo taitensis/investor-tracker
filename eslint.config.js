@@ -1,33 +1,56 @@
 import js from '@eslint/js'
 import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
+import tseslint from 'typescript-eslint'
+import pluginReact from 'eslint-plugin-react'
+import prettier from 'eslint-config-prettier'
+import pluginPrettier from 'eslint-plugin-prettier'
+import { defineConfig } from 'eslint/config'
 
-export default [
-  { ignores: ['dist'] },
+export default defineConfig([
+  // Base JS rules
   {
-    files: ['**/*.{js,jsx}'],
+    files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-      parserOptions: {
-        ecmaVersion: 'latest',
-        ecmaFeatures: { jsx: true },
-        sourceType: 'module',
+      parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
       },
     },
     plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      js,
+      prettier: pluginPrettier,
     },
     rules: {
       ...js.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      'prettier/prettier': 'error',
     },
   },
-]
+
+  // TypeScript rules
+  ...tseslint.configs.recommended,
+
+  // React rules
+  {
+    files: ['**/*.{jsx,tsx}'],
+    plugins: {
+      react: pluginReact,
+    },
+    rules: {
+      ...pluginReact.configs.recommended.rules,
+      'react/react-in-jsx-scope': 'off',
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+  },
+
+  // Prettier override (must come last)
+  {
+    rules: {
+      ...prettier.rules,
+    },
+  },
+])

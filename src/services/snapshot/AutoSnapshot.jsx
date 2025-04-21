@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react'
 import { supabase } from '../../supabaseClient'
 import { useToast } from '../../components/toast/ToastProvider'
@@ -9,14 +8,14 @@ export default function AutoSnapshot() {
 
   useEffect(() => {
     const runSnapshot = async () => {
-      console.log("🟡 AutoSnapshot is running...")
+      console.log('🟡 AutoSnapshot is running...')
 
       const today = new Date().toISOString().split('T')[0]
       const userResponse = await supabase.auth.getUser()
       const user = userResponse?.data?.user
 
       if (!user) {
-        console.error("❌ No user found.")
+        console.error('❌ No user found.')
         return
       }
 
@@ -28,12 +27,12 @@ export default function AutoSnapshot() {
         .limit(1)
 
       if (existingError) {
-        console.error("❌ Error checking snapshot existence:", existingError)
+        console.error('❌ Error checking snapshot existence:', existingError)
         return
       }
 
       if (existing?.length) {
-        console.log("✅ Snapshot already exists. Exiting.")
+        console.log('✅ Snapshot already exists. Exiting.')
         return
       }
 
@@ -45,7 +44,7 @@ export default function AutoSnapshot() {
         .eq('user_id', user.id)
 
       if (tradeError || !trades) {
-        console.error("❌ Could not load trades.", tradeError)
+        console.error('❌ Could not load trades.', tradeError)
         toast.error('❌ Could not load trades.')
         return
       }
@@ -64,12 +63,12 @@ export default function AutoSnapshot() {
           const res = await fetch('/functions/v1/get-ls-price', {
             method: 'POST',
             body: JSON.stringify({ ls_symbol }),
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
           })
           const json = await res.json()
           return json?.price ?? null
         } catch (e) {
-          console.error("❌ Failed to fetch price for", ls_symbol, e)
+          console.error('❌ Failed to fetch price for', ls_symbol, e)
           return null
         }
       }
@@ -98,18 +97,18 @@ export default function AutoSnapshot() {
           date: today,
           average_cost: totalCost,
           market_value: totalValue,
-          pnl: totalValue - totalCost
+          pnl: totalValue - totalCost,
         })
       }
 
-      console.log("📤 Snapshot payload:", snapshots)
+      console.log('📤 Snapshot payload:', snapshots)
 
       const { error: insertError } = await supabase
         .from('position_snapshot')
         .insert(snapshots)
 
       if (insertError) {
-        console.error("❌ Failed to insert snapshot:", insertError)
+        console.error('❌ Failed to insert snapshot:', insertError)
         toast.error('❌ Failed to save snapshot.')
       } else {
         toast.success('✅ Snapshot auto-saved!')

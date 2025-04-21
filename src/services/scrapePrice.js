@@ -7,7 +7,7 @@ const cheerio = await import('cheerio')
 const asset = {
   name: 'Apple Inc',
   type: 'stock', // or 'ETF'
-  ls_path: 'apple-aktie' // stored in your asset table
+  ls_path: 'apple-aktie', // stored in your asset table
 }
 
 // Build the URL dynamically
@@ -22,18 +22,28 @@ async function scrapeStaticPrice() {
     const { data: html } = await axios.get(url)
     const $ = cheerio.load(html)
 
-    const rawPrice = $('span[source="lightstreamer"][field="mid"]').first().text().trim()
+    const rawPrice = $('span[source="lightstreamer"][field="mid"]')
+      .first()
+      .text()
+      .trim()
     const price = parseFloat(rawPrice.replace(',', '.'))
 
     if (isNaN(price)) {
-      console.warn(`[${new Date().toLocaleTimeString()}] Could not parse price from: "${rawPrice}"`)
+      console.warn(
+        `[${new Date().toLocaleTimeString()}] Could not parse price from: "${rawPrice}"`
+      )
       return
     }
 
     if (price !== lastPrice) {
-      console.log(`[${new Date().toLocaleTimeString()}] Price updated: €${price}`)
+      console.log(
+        `[${new Date().toLocaleTimeString()}] Price updated: €${price}`
+      )
       lastPrice = price
-      fs.appendFileSync('price-log.csv', `${new Date().toISOString()},${asset.name},${price}\n`)
+      fs.appendFileSync(
+        'price-log.csv',
+        `${new Date().toISOString()},${asset.name},${price}\n`
+      )
     } else {
       console.log(`[${new Date().toLocaleTimeString()}] No change: €${price}`)
     }

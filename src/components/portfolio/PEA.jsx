@@ -53,7 +53,8 @@ export default function PEA() {
   }
 
   if (loading) return <p className="text-gray-500">Loading...</p>
-  if (assets.length === 0) return <p className="text-gray-500">No PEA assets found.</p>
+  if (assets.length === 0)
+    return <p className="text-gray-500">No PEA assets found.</p>
 
   return (
     <table className="w-full text-sm text-left border-separate border-spacing-y-2">
