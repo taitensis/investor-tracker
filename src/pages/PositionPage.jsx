@@ -4,13 +4,23 @@ import { fetchMarketPrice } from '@/services/price'
 import { Card } from '../components/ui/Card'
 import { buildPositionsFromTrades, buildLsLink } from '../utils/portfolioUtils'
 import { fetchTradesByUser } from '../utils/supabaseQueries'
+import toast from 'react-hot-toast'
 
 export default function PositionPage() {
   const [positions, setPositions] = useState([])
 
   useEffect(() => {
     const loadPositions = async () => {
-      const user = (await supabase.auth.getUser()).data.user
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        console.error('No user logged in!');
+        toast.error('❌ You must be logged in.')
+        return;
+      }
       const trades = await fetchTradesByUser(user.id)
       const results = await buildPositionsFromTrades(trades, fetchMarketPrice)
       setPositions(results)

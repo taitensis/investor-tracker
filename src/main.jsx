@@ -5,11 +5,15 @@ import { createRoot } from 'react-dom/client'
 import './styles/index.css'
 import App from './App.jsx'
 import { ToastProvider } from './components/toast/ToastProvider.jsx'
+import { Auth } from '@supabase/auth-ui-react'
+import { AuthProvider } from './contexts/AuthContext.jsx'
 
 ReactDom.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ToastProvider>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </ToastProvider>
-  </React.StrictMode>
+  </React.StrictMode >
 )
