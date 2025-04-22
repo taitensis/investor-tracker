@@ -17,38 +17,39 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { session } = useAuth();
 
+  // 🔄 Redirect when session is active (user is logged in)
   useEffect(() => {
     if (session) {
       navigate('/dashboard');
     }
   }, [session]);
 
+  // 🔐 Handles both login and signup
   const handleAuth = async (type) => {
     setLoading(true);
     setError('');
 
     try {
-      const authFn = type === 'LOGIN'
-        ? supabase.auth.signInWithPassword
-        : supabase.auth.signUp;
+      let result;
 
-      const result = await authFn({ email, password });
+      if (type === 'LOGIN') {
+        result = await supabase.auth.signInWithPassword({ email, password });
+      } else {
+        result = await supabase.auth.signUp({ email, password });
+      }
 
-      if (result.error) {
-        setError(result.error.message);
+      const { data, error } = result;
+
+      if (error) {
+        setError(error.message);
         return;
       }
 
-      const { data } = await supabase.auth.getSession();
-
-      if (data.session) {
-        toast.success(type === 'LOGIN' ? 'Login successful!' : 'Sign up successful!');
-        navigate('/dashboard');
-      } else if (type === 'SIGNUP') {
-        toast('Check your email to confirm your sign-up!');
-      }
+      toast.success(type === 'LOGIN' ? 'Login successful!' : 'Sign up successful!');
+      // Session will sync via useAuth/AuthContext
     } catch (err) {
-      setError('Something went wrong. Please try again.');
+      console.error(err);
+      setError(err.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }

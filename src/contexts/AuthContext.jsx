@@ -20,7 +20,9 @@ export const AuthProvider = ({ children }) => {
             setSession(session);
         });
 
-        return () => subscription.unsubscribe();
+        return () => {
+            subscription?.unsubscribe(); // prevent error if undefined
+        };
     }, []);
 
     const value = {
