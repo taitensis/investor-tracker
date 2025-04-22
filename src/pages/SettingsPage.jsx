@@ -1,25 +1,30 @@
-import { useState } from 'react'
-import AssetForm from '../components/forms/AssetForm'
-import Modal from '../components/ui/Modal'
-import { useToast } from '../components/toast/ToastProvider'
-import Button from '@components/ui/Button'
+// src/pages/SettingsPage.jsx
+import { useState } from 'react';
+
+import MainLayout from '@/layouts/MainLayout';
+import Button from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
+import AssetForm from '@/components/forms/AssetForm';
+import { useToast } from '@/components/toast/ToastProvider';
 
 export default function SettingsPage() {
-  const [showModal, setShowModal] = useState(false)
-  const toast = useToast()
+  const [showModal, setShowModal] = useState(false);
+  const toast = useToast();
 
   const handleAssetAdded = () => {
-    setShowModal(false)
-    toast('✅ Asset successfully added!')
-  }
+    setShowModal(false);
+    toast('✅ Asset successfully added!');
+  };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-        Settings
-      </h2>
+    <div className="space-y-6 max-w-3xl mx-auto">
+      <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Settings</h2>
 
-      <button onClick={() => setShowModal(true)}>+ Add New Asset</button>
+      <div>
+        <Button onClick={() => setShowModal(true)} variant="primary">
+          + Add New Asset
+        </Button>
+      </div>
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
@@ -28,5 +33,5 @@ export default function SettingsPage() {
         <AssetForm onSubmit={handleAssetAdded} />
       </Modal>
     </div>
-  )
+  );
 }

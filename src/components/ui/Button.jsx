@@ -1,49 +1,34 @@
-// ✅ Correct Button.jsx
-import React from 'react'
-import classNames from 'classnames'
+// src/components/ui/Button.jsx
+import clsx from 'clsx';
 
-const baseStyles =
-  'rounded-xl px-4 py-2 font-medium transition duration-200 focus:outline-none'
-
-const variants = {
-  primary: 'bg-blue-600 text-white hover:bg-blue-700',
-  secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
-  danger: 'bg-red-500 text-white hover:bg-red-600',
-  ghost: 'bg-transparent text-gray-700 hover:bg-gray-100',
-}
-
-const sizes = {
-  sm: 'text-sm',
-  md: 'text-base',
-  lg: 'text-lg',
-}
-
-// ✅ Fix: declare function first
-const Button = ({
+export default function Button({
   children,
-  onClick,
   variant = 'primary',
   size = 'md',
-  className = '',
-  type = 'button',
+  className,
   ...props
-}) => {
+}) {
+  const base = 'inline-flex items-center justify-center rounded font-medium transition-colors focus:outline-none';
+
+  const variants = {
+    primary: 'bg-primary text-white hover:bg-blue-700',
+    secondary: 'bg-secondary text-dark hover:bg-yellow-400',
+    danger: 'bg-red-600 text-white hover:bg-red-700',
+    outline: 'border border-gray-300 text-gray-800 hover:bg-gray-100',
+  };
+
+  const sizes = {
+    sm: 'px-3 py-1 text-sm',
+    md: 'px-4 py-2',
+    lg: 'px-6 py-3 text-lg',
+  };
+
   return (
     <button
-      type={type}
-      onClick={onClick}
-      className={classNames(
-        baseStyles,
-        variants[variant],
-        sizes[size],
-        className
-      )}
+      className={clsx(base, variants[variant], sizes[size], className)}
       {...props}
     >
       {children}
     </button>
-  )
+  );
 }
-
-// ✅ Then export after
-export default Button

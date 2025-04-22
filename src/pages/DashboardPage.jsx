@@ -1,11 +1,19 @@
-import PerformanceSummary from '@components/dashboard/PerformanceSummary'
-import LineChart from '@components/ui/LineChart'
-import { supabase } from '@/supabaseClient'
-import { getLineChartData } from '@utils/chartData'
-import { useEffect, useState } from 'react'
+// src/pages/DashboardPage.jsx
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { supabase } from '@/supabaseClient';
+
+import MainLayout from '@/layouts/MainLayout';
+import PerformanceSummary from '@/components/dashboard/PerformanceSummary';
+import LineChart from '@/components/ui/LineChart';
+import Card from '@/components/ui/Card';
+import LoadingState from '@/components/ui/LoadingState';
+import EmptyState from '@/components/ui/EmptyState';
+import { getLineChartData } from '@/utils/chartData';
+import { LineChart as ChartIcon } from 'lucide-react';
 
 export default function DashboardPage() {
-    const [trades, setTrades] = useState([])
+    const [trades, setTrades] = useState(null);
 
     useEffect(() => {
         const fetchTrades = async () => {
@@ -15,42 +23,52 @@ export default function DashboardPage() {
             } = await supabase.auth.getUser();
 
             if (!user) {
-                console.error('No user logged in!');
-                toast.error('❌ You must be logged in.')
+                toast.error('❌ You must be logged in.');
                 return;
             }
 
-            const { data: tradeData } = await supabase
+            const { data: tradeData, error: tradeError } = await supabase
                 .from('trade')
                 .select('*')
-                .eq('user_id', user.id)
+                .eq('user_id', user.id);
 
-            setTrades(tradeData || [])
-        }
+            if (tradeError) {
+                toast.error('⚠️ Error fetching trades');
+                return;
+            }
 
-        fetchTrades()
-    }, [])
+            setTrades(tradeData || []);
+        };
+
+        fetchTrades();
+    }, []);
 
     return (
         <div className="space-y-6">
-            <h2 className="text-xl font-bold"> Dashboard</h2>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Dashboard</h2>
+
             <PerformanceSummary />
-            {trades.length > 0 ? (
-                <LineChart
-                    title="Portfolio Performance"
-                    data={getLineChartData(trades)}
-                    lines={[
-                        {
-                            key: 'market_value',
-                            color: '#3b82f6',
-                            label: 'Market Value (€)',
-                        },
-                        { key: 'pnl', color: '#16a64a', label: 'PnL (€)' },
-                    ]}
-                />
-            ) : (
-                <p className="text-gray-500">Loading performance data...</p>
-            )}
+
+            <Card title="Portfolio Performance">
+                {trades === null ? (
+                    <LoadingState message="Loading performance data..." />
+                ) : trades.length === 0 ? (
+                    <EmptyState message="No trade data found." icon={<ChartIcon className="h-6 w-6" />} />
+                ) : (
+                    <LineChart
+                        title={null}
+                        data={getLineChartData(trades)}
+                        lines={[
+                            {
+                                key: 'market_value',
+                                color: '#3b82f6',
+                                label: 'Market Value (€)',
+                            },
+                            { key: 'pnl', color: '#16a64a', label: 'PnL (€)' },
+                        ]}
+                    />
+                )}
+            </Card>
         </div>
-    )
+    );
 }

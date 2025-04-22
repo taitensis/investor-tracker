@@ -1,39 +1,37 @@
 // src/pages/DividendPage.jsx
-import DividendList from '@components/dividends/DividendList'
-import DividendForm from '@components/forms/DividendForm'
-import DividendForecastPanel from '@components/dividends/DividendForecastPanel'
-import DividendScheduleForm from '@components/forms/DividendScheduleForm'
-import DividendSummaryPanel from '@components/dividends/DividendSummaryPanel'
-import DividendScheduleList from '@components/dividends/DividendScheduleList'
-import {
-  getForecastedDividends,
-  getMonthlyDividendMap,
-} from '@utils/dividendForecast'
+import MainLayout from '@/layouts/MainLayout';
+import Card from '@/components/ui/Card';
+
+import DividendSummaryPanel from '@/components/dividends/DividendSummaryPanel';
+import DividendScheduleList from '@/components/dividends/DividendScheduleList';
+import DividendForecastPanel from '@/components/dividends/DividendForecastPanel';
+import DividendScheduleForm from '@/components/forms/DividendScheduleForm';
+import DividendForm from '@/components/forms/DividendForm';
+import DividendList from '@/components/dividends/DividendList';
 
 export default function DividendPage() {
   return (
-    <div className="space-y-6 max-w-4xl mx-auto p-6">
-      <h2 className="text-2xl font-bold">Dividends</h2>
-      <div className="bg-white p-4 rounded shadow">
-        <h3 className="text-xl font-semibold mb-2">Dividend Summary</h3>
+    <div className="space-y-6 max-w-5xl mx-auto">
+      <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Dividends</h2>
+
+      <Card title="Dividend Summary">
         <DividendSummaryPanel />
         <DividendScheduleList />
-      </div>
+      </Card>
+
       <DividendForecastPanel />
-      <div className="bg-white p-4 rounded shadow">
-        <h3 className="text-xl font-semibold mb-2">Add Dividend</h3>
+
+      <Card title="Add Scheduled Dividend">
         <DividendScheduleForm />
-      </div>
+      </Card>
 
-      <div className="bg-white p-4 rounded shadow">
-        <h3 className="text-xl font-semibold mb-2">Add Dividend</h3>
+      <Card title="Add One-Time Dividend">
         <DividendForm />
-      </div>
+      </Card>
 
-      <div className="bg-white p-4 rounded shadow">
-        <h3 className="text-xl font-semibold mb-2">Past Dividends</h3>
+      <Card title="Past Dividends">
         <DividendList />
-      </div>
+      </Card>
     </div>
-  )
+  );
 }
